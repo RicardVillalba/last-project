@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VUE_APP_SUPABASE_URL

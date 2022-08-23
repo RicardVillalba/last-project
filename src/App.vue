@@ -1,11 +1,16 @@
 <template>
-  <div>
+  <div class="box-border min-h-full font-Poppins">
+    <Navigation/>
     <router-view />
   </div>
 </template>
 
 <script>
+import Navigation from './components/Navigation.vue'
 export default {
+  components:{
+    Navigation,
+  },
   setup() {
     // Create data / vars
 
