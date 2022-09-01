@@ -28,7 +28,7 @@
             required
             class="p-2 text-gray-500 focus:outline-none"
             id="tasks-name"
-            v-model="tasksName"
+            v-model="taskName"
           />
         </div>
 
@@ -55,7 +55,7 @@ export default {
   name: "create",
   setup() {
     // Create data
-    const tasksName = ref("");
+    const taskName = ref("");
     const statusMsg = ref(null);
     const errorMsg = ref(null);
     // Add exercise
@@ -67,13 +67,13 @@ export default {
       try {
         const { error } = await supabase.from("tasks").insert([
           {
-            name: name.value,
+            taskName: taskName.value,
          
           },
         ]);
         if (error) throw error;
         statusMsg.value = "Succes: tasks Created!";
-        tasksName.value = null;
+        taskName.value = null;
         
         
         setTimeout(() => {
@@ -87,7 +87,7 @@ export default {
       }
     };
     return {
-      tasksName,
+      taskName,
       statusMsg,
       errorMsg,
       createtasks,
