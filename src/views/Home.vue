@@ -1,40 +1,30 @@
 <template>
-<div class="max-w-screen-md mx-auto px-4 py-10">
-
-
-
-
-  <div
-        class="flex flex-col items-center p-8 shadow-md cursor-pointer"
-        v-for="(tasks, index) in data"
-        :key="index"
-      >
+  <div class="max-w-screen-md mx-auto px-4 py-10">
+    <div
+      class="flex flex-col items-center p-8 shadow-md cursor-pointer"
+      v-for="(tasks, index) in data"
+      :key="index"
+    >
       <div class=" flex ">
         <h1 class="text-xl ">
           {{ tasks.taskName }}
         </h1>
         <div class=" w-[50%] flex flex-row justify-between content-between">
-          <button > <img class="bg-black"  src="../assets/images/edit.png" alt="edit"> </button>
-        <button><img class="bg-black "  src="../assets/images/delete.png" alt="delete"> </button>
+          <button >
+            <img class="bg-black" src="../assets/images/edit.png" alt="edit" />
+          </button>
+          <button>
+            <img
+              class="bg-black "
+              @click="deleteTask(tasks.id)" 
+              src="../assets/images/delete.png"
+              alt="delete"
+            />
+          </button>
+          <h1>{{ tasks.id }}</h1>
         </div>
-
       </div>
- 
-      </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
 
     <!-- Status Message -->
     <div
@@ -82,36 +72,33 @@
 </template>
 
 <script>
-  import { ref } from "vue";
-// import { uid } from "uid";
+import { ref, computed } from "vue";
 import { supabase } from "../supabase/init";
-
+import store from "../store/index";
 
 export default {
   name: "Home",
   components: {},
   setup() {
-
     const taskName = ref("");
     const statusMsg = ref(null);
     const errorMsg = ref(null);
     const data = ref([]);
     const dataLoaded = ref(null);
- 
+    const user = computed(() => store.state.user);
+
     // Create tasks
     const createtasks = async () => {
       try {
         const { error } = await supabase.from("tasks").insert([
           {
             taskName: taskName.value,
-         
           },
         ]);
         if (error) throw error;
         statusMsg.value = "Succes: tasks Created!";
         taskName.value = null;
-        
-        
+
         setTimeout(() => {
           statusMsg.value = false;
         }, 5000);
@@ -124,21 +111,58 @@ export default {
     };
 
     // Get data
-const getData = async()=> {
-  try {
-    const { data: tasks, error } = await supabase.from("tasks").select('*');
-    if(error) throw error;
-    data.value = tasks;
-    dataLoaded.value = true;
-    console.log(data.value);
-  } catch (error) {
-    console.warn(error.message);
-  }
-}
-    // Run data function
-getData();
+    const getData = async () => {
+      try {
+        const { data: tasks, error } = await supabase.from("tasks").select("*");
+        if (error) throw error;
+        data.value = tasks;
+        dataLoaded.value = true;
+        console.log(data.value);
+      } catch (error) {
+        console.warn(error.message);
+      }
+    };
+    getData();
+
+    // Delete Task
+
+    
+    const deleteTask = async (id) => {
+      try {
+        console.log(id);
+        const { error } = await supabase
+          .from("tasks")
+          .delete()
+          .eq("id", id)
+        if (error) throw error;
+      } catch (error) {
+        errorMsg.value = `Error: ${error.message}`;
+        setTimeout(() => {
+          errorMsg.value = false;
+        }, 5000);
+      }
+    };
+
+    // const deleteTask = (id) => {
+    //   if (data.value) {
+    //     data.value = data.value.filter(
+    //       (task) => task.id !== id
+    //     );
+    //     return;
+    //   }
+    //   errorMsg.value = "Error: Cannot remove";
+    //   setTimeout(() => {
+    //     errorMsg.value = false;
+    //   }, 5000);
+    // };
 
 
+
+
+
+
+
+   
 
     return {
       taskName,
@@ -147,10 +171,9 @@ getData();
       createtasks,
       dataLoaded,
       data,
+      deleteTask,
+      user,
     };
-
-
-    
   },
 };
 </script>
