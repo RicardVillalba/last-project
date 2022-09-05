@@ -1,6 +1,41 @@
-
 <template>
-  <div class="max-w-screen-md mx-auto px-4 py-10">
+<div class="max-w-screen-md mx-auto px-4 py-10">
+
+
+
+
+  <div
+        class="flex flex-col items-center p-8 shadow-md cursor-pointer"
+        v-for="(tasks, index) in data"
+        :key="index"
+      >
+      <div class=" flex ">
+        <h1 class="text-xl ">
+          {{ tasks.taskName }}
+        </h1>
+        <div class=" w-[50%] flex flex-row justify-between content-between">
+          <button > <img class="bg-black"  src="../assets/images/edit.png" alt="edit"> </button>
+        <button><img class="bg-black "  src="../assets/images/delete.png" alt="delete"> </button>
+        </div>
+
+      </div>
+ 
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- Status Message -->
     <div
       v-if="statusMsg || errorMsg"
@@ -60,7 +95,8 @@ export default {
     const taskName = ref("");
     const statusMsg = ref(null);
     const errorMsg = ref(null);
-   
+    const data = ref([]);
+    const dataLoaded = ref(null);
  
     // Create tasks
     const createtasks = async () => {
@@ -87,13 +123,6 @@ export default {
       }
     };
 
-
-
-    // Create data / vars
-    const data = ref([]);
-const dataLoaded = ref(null);
-
-
     // Get data
 const getData = async()=> {
   try {
@@ -116,8 +145,8 @@ getData();
       statusMsg,
       errorMsg,
       createtasks,
-      getData,
       dataLoaded,
+      data,
     };
 
 
