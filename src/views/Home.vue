@@ -1,28 +1,42 @@
 <template>
   <div class="max-w-screen-md mx-auto px-4 py-10">
     <div
-      class="flex flex-col items-center p-8 shadow-md cursor-pointer"
+      class="w-full flex justify-center items-center shadow-md cursor-pointer mb-5 p-5"
       v-for="(tasks, index) in data"
       :key="index"
     >
-      <div class=" flex ">
-        <h1 class="text-xl ">
+      <div class=" w-full flex justify-between items-center ">
+        <h1 class="text-xl w-full ">
           {{ tasks.taskName }}
         </h1>
-        <div class=" w-[50%] flex flex-row justify-between content-between">
-          <button >
-            <img class="bg-black" src="../assets/images/edit.png" alt="edit" />
+        <form
+          @submit.prevent="updateTask(tasks.id)"
+          class="flex justify-between items-center w-full"
+        >
+          <input
+            type="text"
+            required
+            class=" text-gray-500 focus:outline-none border-2"
+            id="{id}"
+            v-model="taskNameUpdate"
+          />
+          <button
+            type="submit"
+            class=" py-2 px-8 mr-2 rounded-sm self-start text-sm
+      text-white bg-black duration-200 border-solid
+      border-2 border-transparent hover:border-black  hover:bg-white
+      hover:text-black"
+          >
+            edit
           </button>
-          <button>
-            <img
-              class="bg-black "
-              @click="deleteTask(tasks.id)" 
-              src="../assets/images/delete.png"
-              alt="delete"
-            />
+
+        </form>
+        <button  @click="deleteTask(tasks.id)"   class=" py-2 px-6 rounded-sm self-start text-sm
+      text-white bg-black duration-200 border-solid
+      border-2 border-transparent hover:border-black hover:bg-white
+      hover:text-black">
+      delete
           </button>
-          <h1>{{ tasks.id }}</h1>
-        </div>
       </div>
     </div>
 
@@ -45,9 +59,7 @@
 
         <!-- tasks Name -->
         <div class="flex flex-col">
-          <label for="tasks-name" class="mb-1 text-sm text-at-light-green"
-            >tasks Name</label
-          >
+   
           <input
             type="text"
             required
@@ -60,9 +72,9 @@
         <button
           type="submit"
           class="mt-6 py-2 px-6 rounded-sm self-start text-sm
-      text-white bg-at-light-green duration-200 border-solid
-      border-2 border-transparent hover:border-at-light-green hover:bg-white
-      hover:text-at-light-green"
+      text-white bg-black duration-200 border-solid
+      border-2 border-transparent hover:border-black hover:bg-white
+      hover:text-black"
         >
           Add
         </button>
@@ -81,6 +93,7 @@ export default {
   components: {},
   setup() {
     const taskName = ref("");
+    const taskNameUpdate = ref("");
     const statusMsg = ref(null);
     const errorMsg = ref(null);
     const data = ref([]);
@@ -98,7 +111,30 @@ export default {
         if (error) throw error;
         statusMsg.value = "Succes: tasks Created!";
         taskName.value = null;
+        getData();
+        setTimeout(() => {
+          statusMsg.value = false;
+        }, 5000);
+      } catch (error) {
+        errorMsg.value = `Error: ${error.message}`;
+        setTimeout(() => {
+          errorMsg.value = false;
+        }, 5000);
+      }
+    };
 
+    // Create tasks after update
+    const createtasksUpdate = async () => {
+      try {
+        const { error } = await supabase.from("tasks").insert([
+          {
+            taskName: taskNameUpdate.value,
+          },
+        ]);
+        if (error) throw error;
+        statusMsg.value = "Succes: tasks Updated!";
+        taskNameUpdate.value = null;
+        getData();
         setTimeout(() => {
           statusMsg.value = false;
         }, 5000);
@@ -125,15 +161,33 @@ export default {
     getData();
 
     // Delete Task
-
-    
     const deleteTask = async (id) => {
+      try {
+        const { error } = await supabase
+          .from("tasks")
+          .delete()
+          .eq("id", id);
+        if (error) throw error;
+        getData();
+      } catch (error) {
+        errorMsg.value = `Error: ${error.message}`;
+        setTimeout(() => {
+          errorMsg.value = false;
+        }, 5000);
+      }
+    };
+
+    //update task
+
+    const updateTask = async (id) => {
       try {
         console.log(id);
         const { error } = await supabase
           .from("tasks")
-          .delete()
-          .eq("id", id)
+          .update({ taskName: taskNameUpdate.value })
+          .eq("id", id);
+        deleteTask(id);
+        createtasksUpdate();
         if (error) throw error;
       } catch (error) {
         errorMsg.value = `Error: ${error.message}`;
@@ -143,36 +197,18 @@ export default {
       }
     };
 
-    // const deleteTask = (id) => {
-    //   if (data.value) {
-    //     data.value = data.value.filter(
-    //       (task) => task.id !== id
-    //     );
-    //     return;
-    //   }
-    //   errorMsg.value = "Error: Cannot remove";
-    //   setTimeout(() => {
-    //     errorMsg.value = false;
-    //   }, 5000);
-    // };
-
-
-
-
-
-
-
-   
-
     return {
       taskName,
       statusMsg,
       errorMsg,
       createtasks,
+
       dataLoaded,
       data,
       deleteTask,
       user,
+      updateTask,
+      taskNameUpdate,
     };
   },
 };
