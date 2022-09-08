@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-at-light-green text-black">
+  <header class="bg-at-light-green text-black uppercase font-bold">
     <nav
       class="container py-5 px-4 flex flex-col gap-4 items-center sm:flex-row"
     >

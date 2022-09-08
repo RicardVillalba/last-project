@@ -10,7 +10,7 @@ module.exports = {
       },
     },
     fontFamily: {
-      Poppins: ["Poppins, sans-serif"],
+      Montserrat: ["Montserrat, sans-serif"],
     },
     flex: {
       "1": "1 1 0%",

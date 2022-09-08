@@ -1,5 +1,9 @@
 <template>
-  <div class="max-w-screen-md mx-auto px-4 py-10">
+  <div v-if="!user" class="w-full flex justify-center transition-opacity" >
+    <img  src="../assets/images/logo-512x512.png" class="" alt="logo">
+  </div>
+
+  <div v-if="user" class="max-w-screen-md mx-auto px-4 py-10">
     <div
       class="w-full flex justify-center items-center shadow-md cursor-pointer mb-5 p-5"
       v-for="(tasks, index) in data"
@@ -25,18 +29,21 @@
             class=" py-2 px-8 mr-2 rounded-sm self-start text-sm
       text-white bg-black duration-200 border-solid
       border-2 border-transparent hover:border-black  hover:bg-white
-      hover:text-black"
+      hover:text-black uppercase font-semibold"
           >
             edit
           </button>
-
         </form>
-        <button  @click="deleteTask(tasks.id)"   class=" py-2 px-6 rounded-sm self-start text-sm
+
+        <button
+          @click="deleteTask(tasks.id)"
+          class=" py-2 px-6 rounded-sm self-start text-sm
       text-white bg-black duration-200 border-solid
       border-2 border-transparent hover:border-black hover:bg-white
-      hover:text-black">
-      delete
-          </button>
+      hover:text-black uppercase font-semibold"
+        >
+          delete
+        </button>
       </div>
     </div>
 
@@ -45,7 +52,7 @@
       v-if="statusMsg || errorMsg"
       class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
     >
-      <p class="text-at-light-green">
+      <p class="text-black">
         {{ statusMsg }}
       </p>
       <p class="text-red-500">{{ errorMsg }}</p>
@@ -55,11 +62,10 @@
     <div class="p-8 flex items-start bg-light-grey rounded-md shadow-lg">
       <!-- Form -->
       <form @submit.prevent="createtasks" class="flex flex-col gap-y-5 w-full">
-        <h1 class="text-2xl text-at-light-green">Add a tasks</h1>
+        <h1 class="text-2xl text-black">Add a tasks</h1>
 
         <!-- tasks Name -->
         <div class="flex flex-col">
-   
           <input
             type="text"
             required
@@ -74,7 +80,7 @@
           class="mt-6 py-2 px-6 rounded-sm self-start text-sm
       text-white bg-black duration-200 border-solid
       border-2 border-transparent hover:border-black hover:bg-white
-      hover:text-black"
+      hover:text-black uppercase font-semibold"
         >
           Add
         </button>
@@ -153,7 +159,7 @@ export default {
         if (error) throw error;
         data.value = tasks;
         dataLoaded.value = true;
-        console.log(data.value);
+        console.log(store.state.user);
       } catch (error) {
         console.warn(error.message);
       }
@@ -202,7 +208,6 @@ export default {
       statusMsg,
       errorMsg,
       createtasks,
-
       dataLoaded,
       data,
       deleteTask,
