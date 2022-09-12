@@ -12,7 +12,7 @@ import { supabase } from "./supabase/init";
 import store from "./store/index";
 export default {
   components: {
-    Navigation,
+    Navigation,//
   },
   setup() {
     // Create data / vars
