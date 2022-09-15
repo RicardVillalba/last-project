@@ -18,6 +18,9 @@
         <router-link v-if="!user" class="cursor-pointer" :to="{ name: 'Login' }"
           >Login</router-link
         >
+        <router-link v-if="!user" class="cursor-pointer" :to="{ name: 'Register' }"
+          >Register</router-link
+        >
         <li v-if="user" @click="logout" class="cursor-pointer">Logout</li>
       </ul>
     </nav>
