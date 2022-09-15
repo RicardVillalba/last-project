@@ -47,7 +47,6 @@
       </div>
     </div>
 
-    <!-- Status Message -->
     <div
       v-if="statusMsg || errorMsg"
       class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
@@ -58,13 +57,11 @@
       <p class="text-red-500">{{ errorMsg }}</p>
     </div>
 
-    <!-- Create -->
+  
     <div class="p-8 flex items-start bg-light-grey rounded-md shadow-lg">
-      <!-- Form -->
+  
       <form @submit.prevent="createtasks" class="flex flex-col gap-y-5 w-full">
         <h1 class="text-2xl text-black">Add a tasks</h1>
-
-        <!-- tasks Name -->
         <div class="flex flex-col">
           <input
             type="text"
@@ -106,7 +103,6 @@ export default {
     const dataLoaded = ref(null);
     const user = computed(() => store.state.user);
 
-    // Create tasks
     const createtasks = async () => {
       try {
         const { error } = await supabase.from("tasks").insert([
@@ -129,7 +125,6 @@ export default {
       }
     };
 
-    // Create tasks after update
     const createtasksUpdate = async () => {
       try {
         const { error } = await supabase.from("tasks").insert([
@@ -152,7 +147,6 @@ export default {
       }
     };
 
-    // Get data
     const getData = async () => {
       try {
         const { data: tasks, error } = await supabase.from("tasks").select("*");
@@ -166,7 +160,6 @@ export default {
     };
     getData();
 
-    // Delete Task
     const deleteTask = async (id) => {
       try {
         const { error } = await supabase
@@ -182,8 +175,6 @@ export default {
         }, 5000);
       }
     };
-
-    //update task
 
     const updateTask = async (id) => {
       try {
